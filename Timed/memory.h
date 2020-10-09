@@ -2,15 +2,13 @@
 #include "interface.h"
 #include <fstream>
 #define MEM_SIZE 70000
-// this class implements the virtual functions
-// in the interfaces
+
 class memory: public sc_module, public simple_mem_if
 {
   private:
     unsigned int memData[MEM_SIZE]={0};
 
   public:
-  // constructor
     memory(sc_module_name nm, char* file) : sc_module(nm)
     {
       ifstream init_file(file);

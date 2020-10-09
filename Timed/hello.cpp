@@ -21,24 +21,34 @@ SC_MODULE(sad) {
 
     for (block=0; block<NUM_BLOCKS; block++)
     {
+      wait(10,SC_NS);
       res = 0;
       for (i=0; i<BLOCK_SIZE; i++)
       {
+        wait(10,SC_NS);
         MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
         MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
 
         v = a - b;
+        wait(10,SC_NS);
         if( v < 0 ) v = -v;
+        wait(10,SC_NS);
+        wait(10,SC_NS);
         res += v;
+        wait(10,SC_NS);
         //cout << res <<' ' << "======";
+        wait(10,SC_NS);
       }
       MEM->Write(SAD_OUTPUT_ADDR + block, res);
       cout << sc_time_stamp() << " | block : " << block << " | sad : " << res << std::endl;
+      wait(10,SC_NS);
     }
+    
+    sc_stop();
   }
 
   SC_CTOR(sad)       {
-    SC_METHOD(sadFunction);   
+    SC_THREAD(sadFunction);   
   }
 };
 
@@ -62,7 +72,10 @@ int sc_main(int argc, char* argv[]) {
 
       // Link memory
   Sad1.MEM(Mem_Simple);
-  Sad1.sadFunction();
+
+  sc_start();
+  
+  //Sad1.sadFunction();
 
   // int arr[500];
   // ifstream is("mem.txt");
