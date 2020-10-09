@@ -1,75 +1,92 @@
 // All systemc modules should include systemc.h header file
 #include "systemc.h"
+#include "interface.h"
+#include "memory.h"
 #include <fstream>
 
-#define WIDTH  32
+#define NUM_BLOCKS 50
+#define BLOCK_SIZE 6
+#define INPUT1_ADDR 0
+#define INPUT2_ADDR 3
+#define SAD_OUTPUT_ADDR 400
 
-SC_MODULE(adder) {
-  sc_in<sc_int<WIDTH> > a, b;  
-  sc_out<sc_int<WIDTH> > sum;
+SC_MODULE(sad) {
+  sc_port<simple_mem_if> MEM;
 
-  void do_add() {
-    sum.write(a.read() + b.read());
-    cout<<"@" << "sum is" <<sum.read()<<endl;
+  void sadFunction() {
+    int i, v;
+    unsigned int block;
+    unsigned int res;
+    unsigned int a, b;
+
+    for (block=0; block<NUM_BLOCKS; block++)
+    {
+      res = 0;
+      for (i=0; i<BLOCK_SIZE; i++)
+      {
+        MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
+        MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
+
+        v = a - b;
+        if( v < 0 ) v = -v;
+        res += v;
+        //cout << res <<' ' << "======";
+      }
+      MEM->Write(SAD_OUTPUT_ADDR + block, res);
+      cout << sc_time_stamp() << " | block : " << block << " | sad : " << res << std::endl;
+    }
   }
 
-  SC_CTOR(adder)       {
-    SC_METHOD(do_add);   
-    sensitive << a << b; 
+  SC_CTOR(sad)       {
+    SC_METHOD(sadFunction);   
   }
 };
+
 
 
 SC_MODULE (hello_world) {
   SC_CTOR (hello_world) {
     // Nothing in constructor 
   }
-  void say_hello(int arr[500]) {
+  void say_hello() {
     //Print "Hello World" to the console.
-    cout << "Hello World.\n" << arr[3];
+    cout << "Hello World.\n";
   }
 };
 
-
-
-
-
 // sc_main in top level function like in C++ main
 int sc_main(int argc, char* argv[]) {
+  sad Sad1("SAD1");
+  char* file = (char *)"mem.txt";
+  memory Mem_Simple("MEM_SMPL", (char *)file);
 
-  // sc_signal<sc_int<WIDTH> >   a ;
-  // sc_signal<sc_int<WIDTH> >   b ;
-  // sc_signal<sc_int<WIDTH> >   s;
-  // a=5;
-  // b=6; 
-  // adder myadder("adding");
-  // myadder.a(a);
-  // myadder.b(b);
-  // myadder.sum(s);
-  // myadder.do_add();
+      // Link memory
+  Sad1.MEM(Mem_Simple);
+  Sad1.sadFunction();
 
-  int arr[500];
-  ifstream is("mem.txt");
-  int cnt= 0;
-  int x;
-  // check that array is not already full
-  while (cnt<500){
-    if (is >> x){
-      arr[cnt++] = x;
-    }
-    else {
-      arr[cnt++] = 0;
-    }
-  } 
+  // int arr[500];
+  // ifstream is("mem.txt");
+  // int cnt= 0;
+  // int x;
+  // // check that array is not already full
+  // while (cnt<500){
+  //   if (is >> x){
+  //     arr[cnt++] = x;
+  //   }
+  //   else {
+  //     arr[cnt++] = 0;
+  //   }
+  // } 
   // print the integers stored in the array
-  cout<<"The integers are:"<<"\n";
-  for (int i = 0; i < cnt; i++) {
-    cout << arr[i] <<' ';
-  }
-  cout << "=====" << arr[0]*2 <<endl;
+  // cout<<"The integers are:"<<"\n";
+  // for (int i = 0; i < cnt; i++) {
+  //   cout << arr[i] <<' ';
+  // }
+  // cout << "=====" << arr[0]*2 <<endl;
 
-  hello_world hello("HELLO");
-  hello.say_hello(arr);
-
+  // hello_world hello("HELLO");
+  // // Print the hello world
+  // hello.say_hello();
   return(0);
 }
+

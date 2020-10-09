@@ -7,22 +7,26 @@
 class memory: public sc_module, public simple_mem_if
 {
   private:
-    unsigned int memData[MEM_SIZE]={};
+    unsigned int memData[MEM_SIZE]={0};
 
   public:
   // constructor
     memory(sc_module_name nm, char* file) : sc_module(nm)
     {
-      ifstream init_file("mem.txt");
+      cout << file;
+      //ifstream init_file("mem.txt");
       int cnt= 0;
       int x;
        while (init_file >> x){
         // arr[cnt++] = x;
         this->Write(cnt++, x);
+        //cout << x <<' ';
+
+
       }
 
     }
-    bool memory::Write(unsigned int addr, unsigned int data)
+    bool Write(unsigned int addr, unsigned int data)
     {
       if (addr < MEM_SIZE)
       {
@@ -32,7 +36,7 @@ class memory: public sc_module, public simple_mem_if
       return false;
       }
 
-    bool memory::Read(unsigned int addr, unsigned int& data)
+    bool Read(unsigned int addr, unsigned int& data)
     {
       if (addr < MEM_SIZE)
       {
