@@ -26,14 +26,14 @@ SC_MODULE(sad) {
       {
         MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
         MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
-
+        //cout  << " | A : " << a << " | B : " << b << std::endl;
         v = a - b;
         if( v < 0 ) v = -v;
         res += v;
         //cout << res <<' ' << "======";
       }
       MEM->Write(SAD_OUTPUT_ADDR + block, res);
-      cout << sc_time_stamp() << " | block : " << block << " | sad : " << res << std::endl;
+      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
     }
   }
 

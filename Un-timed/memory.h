@@ -17,9 +17,9 @@ class memory: public sc_module, public simple_mem_if
       int cnt= 0;
       int x;
        while (init_file >> x){
-        // arr[cnt++] = x;
-        this->Write(cnt++, x);
-        cnt++;
+        memData[cnt++] = x;
+        //this->Write(cnt++, x);
+        //cnt++;
 
 
       }
@@ -30,7 +30,8 @@ class memory: public sc_module, public simple_mem_if
     {
       if (addr < MEM_SIZE)
       {
-        this->memData[addr]=data;
+        memData[addr]=data;
+        //cout << "Writing " << data << endl;
         return true;
       }
       return false;
@@ -40,7 +41,8 @@ class memory: public sc_module, public simple_mem_if
     {
       if (addr < MEM_SIZE)
       {
-        data=this->memData[addr];
+        data=memData[addr];
+        //cout << "Reading " << data <<endl;
         return true;
       }
       return false;

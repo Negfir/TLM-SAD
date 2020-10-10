@@ -40,7 +40,7 @@ SC_MODULE(sad) {
         wait(10,SC_NS);
       }
       MEM->Write(SAD_OUTPUT_ADDR + block, res);
-      cout << sc_time_stamp() << " | block : " << block << " | sad : " << res << std::endl;
+      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
       wait(10,SC_NS);
     }
     
