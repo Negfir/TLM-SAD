@@ -39,7 +39,7 @@ class MEMORY_RTL: public sc_module
     {
       if (Ren.read() == sc_logic_0 && Wen.read() == sc_logic_0)
       {
-        Ack.write(sc_logic_Z);
+        Ack.write(sc_logic_0);
         return;
       }
       

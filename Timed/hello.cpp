@@ -64,7 +64,7 @@ int sc_main(int argc, char* argv[]) {
   
 
 
-  sc_trace_file *wf = sc_create_vcd_trace_file("counter");
+  sc_trace_file *wf = sc_create_vcd_trace_file("WaveForm");
  
   sc_trace(wf, mem.addr_sig , "addr" );
   sc_trace(wf, mem.dataIn_sig , "dataIn" );
