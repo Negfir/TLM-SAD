@@ -21,6 +21,20 @@ class MEMORY_RTL: public sc_module
     SC_HAS_PROCESS(MEMORY_RTL);
 
 
+    MEMORY_RTL(sc_module_name nm, char* file) : sc_module(nm)
+    {
+      ifstream init_file(file);
+      int cnt= 0;
+      int x;
+       while (init_file >> x){
+        memData[cnt++] = x;}
+
+      SC_METHOD(rtl);
+      sensitive << clk.pos();
+    }
+
+
+
     void rtl()
     {
       if (Ren.read() == sc_logic_0 && Wen.read() == sc_logic_0)
@@ -28,18 +42,21 @@ class MEMORY_RTL: public sc_module
         Ack.write(sc_logic_Z);
         return;
       }
-      int addr_val = Addr.read();
-      if (addr_val < MEM_SIZE)
+      
+      if (Addr.read() < MEM_SIZE)
       {
-        if(Ren.read() == sc_logic_1)
+
+        if (Wen.read() == sc_logic_1)
+        {
+          memData[Addr.read()] = DataIn.read();
+        }
+
+        else if(Ren.read() == sc_logic_1)
         {
          
-          DataOut.write(memData[addr_val]);
+          DataOut.write(memData[Addr.read()]);
         }
-        else if (Wen.read() == sc_logic_1)
-        {
-          memData[addr_val] = DataIn.read();
-        }
+
 
         Ack.write(sc_logic_1);
       }
@@ -52,17 +69,6 @@ class MEMORY_RTL: public sc_module
 
 
 
-    MEMORY_RTL(sc_module_name nm, char* file) : sc_module(nm)
-    {
-      ifstream init_file(file);
-      int cnt= 0;
-      int x;
-       while (init_file >> x){
-        memData[cnt++] = x;}
-
-      SC_METHOD(rtl);
-      sensitive << clk.pos();
-    }
 
 
 };

@@ -7,9 +7,9 @@
 
 class memory: public sc_module, public simple_mem_if
 {
-  private:
-  
 
+  
+  public:
     sc_signal<int> addr_sig;
     sc_signal<int> dataIn_sig;
     sc_signal<int> dataOut_sig;
@@ -18,10 +18,10 @@ class memory: public sc_module, public simple_mem_if
     sc_signal<sc_logic> ack_sig;
     sc_signal<sc_logic> clk_sig;
 
-  public:
+  
     MEMORY_RTL mem_rtl;
     oscillator osc;
-    memory(sc_module_name nm, char* file) : sc_module(nm), osc("oscillator"), mem_rtl("MEMORY_RTL",(char *)"mem_init.txt")
+    memory(sc_module_name nm, char* file) : sc_module(nm), osc("oscillator"), mem_rtl("MEMORY_RTL",(char *)file)
     {
 
 
@@ -89,10 +89,8 @@ class memory: public sc_module, public simple_mem_if
       }
 
 
-    // void memory::register_port(sc_port_base& port_, const char* if_typename_)
-    // {
-    //   cout << "binding " << port_.name() << " to " << "interface: " << if_typename_ << endl;
-    // }
+
+
   };
 
 

@@ -1,4 +1,3 @@
-// All systemc modules should include systemc.h header file
 #include "systemc.h"
 #include "interface.h"
 #include "memory.h"
@@ -36,7 +35,7 @@ SC_MODULE(sad) {
         wait(10,SC_NS);
         res += v;
         wait(10,SC_NS);
-        //cout << res <<' ' << "======";
+        //cout << "======"<< res <<endl ;
         wait(10,SC_NS);
       }
       MEM->Write(SAD_OUTPUT_ADDR + block, res);
@@ -48,56 +47,38 @@ SC_MODULE(sad) {
   }
 
   SC_CTOR(sad)       {
-    SC_THREAD(sadFunction);   
+    SC_THREAD(sadFunction);  
+
   }
 };
 
 
 
-SC_MODULE (hello_world) {
-  SC_CTOR (hello_world) {
-    // Nothing in constructor 
-  }
-  void say_hello() {
-    //Print "Hello World" to the console.
-    cout << "Hello World.\n";
-  }
-};
 
-// sc_main in top level function like in C++ main
 int sc_main(int argc, char* argv[]) {
-  sad Sad1("SAD1");
+  sad sadModule("sadModule");
   char* file = (char *)"mem_init.txt";
-  memory Mem_Simple("MEM_SMPL", (char *)file);
+  memory mem("mem", (char *)file);
 
-      // Link memory
-  Sad1.MEM(Mem_Simple);
-  //Sad1.sadFunction();
+  sadModule.MEM(mem);
+  
+
+
+  sc_trace_file *wf = sc_create_vcd_trace_file("counter");
+ 
+  sc_trace(wf, mem.addr_sig , "addr" );
+  sc_trace(wf, mem.dataIn_sig , "dataIn" );
+  sc_trace(wf, mem.dataOut_sig , "dataOut" );
+  sc_trace(wf, mem.ren_sig, "ren");
+  sc_trace(wf, mem.wen_sig, "wen");
+  sc_trace(wf, mem.ack_sig, "ack");
+  sc_trace(wf, mem.clk_sig, "clk");
+
   sc_start();
 
-  // int arr[500];
-  // ifstream is("mem.txt");
-  // int cnt= 0;
-  // int x;
-  // // check that array is not already full
-  // while (cnt<500){
-  //   if (is >> x){
-  //     arr[cnt++] = x;
-  //   }
-  //   else {
-  //     arr[cnt++] = 0;
-  //   }
-  // } 
-  // print the integers stored in the array
-  // cout<<"The integers are:"<<"\n";
-  // for (int i = 0; i < cnt; i++) {
-  //   cout << arr[i] <<' ';
-  // }
-  // cout << "=====" << arr[0]*2 <<endl;
+  sc_close_vcd_trace_file(wf);
 
-  // hello_world hello("HELLO");
-  // // Print the hello world
-  // hello.say_hello();
+
   return(0);
 }
 
