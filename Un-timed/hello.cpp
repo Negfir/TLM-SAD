@@ -1,4 +1,4 @@
-// All systemc modules should include systemc.h header file
+
 #include "systemc.h"
 #include "interface.h"
 #include "memory.h"
@@ -26,67 +26,35 @@ SC_MODULE(sad) {
       {
         MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
         MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
-        //cout  << " | A : " << a << " | B : " << b << std::endl;
+        //cout  << " A : " << a << " B : " << b << endl;
         v = a - b;
         if( v < 0 ) v = -v;
         res += v;
-        //cout << res <<' ' << "======";
+        //cout << "======"<< res <<endl ;
       }
       MEM->Write(SAD_OUTPUT_ADDR + block, res);
       cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
     }
   }
 
+
   SC_CTOR(sad)       {
     SC_METHOD(sadFunction);   
   }
+
+
 };
 
 
 
-SC_MODULE (hello_world) {
-  SC_CTOR (hello_world) {
-    // Nothing in constructor 
-  }
-  void say_hello() {
-    //Print "Hello World" to the console.
-    cout << "Hello World.\n";
-  }
-};
-
-// sc_main in top level function like in C++ main
 int sc_main(int argc, char* argv[]) {
-  sad Sad1("SAD1");
+  sad sadModule("sadModule");
   char* file = (char *)"mem_init.txt";
-  memory Mem_Simple("MEM_SMPL", (char *)file);
+  memory mem("mem", (char *)file);
 
-      // Link memory
-  Sad1.MEM(Mem_Simple);
-  Sad1.sadFunction();
+  sadModule.MEM(mem);
+  sadModule.sadFunction();
 
-  // int arr[500];
-  // ifstream is("mem.txt");
-  // int cnt= 0;
-  // int x;
-  // // check that array is not already full
-  // while (cnt<500){
-  //   if (is >> x){
-  //     arr[cnt++] = x;
-  //   }
-  //   else {
-  //     arr[cnt++] = 0;
-  //   }
-  // } 
-  // print the integers stored in the array
-  // cout<<"The integers are:"<<"\n";
-  // for (int i = 0; i < cnt; i++) {
-  //   cout << arr[i] <<' ';
-  // }
-  // cout << "=====" << arr[0]*2 <<endl;
-
-  // hello_world hello("HELLO");
-  // // Print the hello world
-  // hello.say_hello();
   return(0);
 }
 

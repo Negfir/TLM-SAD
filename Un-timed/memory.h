@@ -2,15 +2,15 @@
 #include "interface.h"
 #include <fstream>
 #define MEM_SIZE 70000
-// this class implements the virtual functions
-// in the interfaces
+
+
 class memory: public sc_module, public simple_mem_if
 {
   private:
     unsigned int memData[MEM_SIZE]={0};
 
   public:
-  // constructor
+
     memory(sc_module_name nm, char* file) : sc_module(nm)
     {
       ifstream init_file(file);
@@ -18,12 +18,10 @@ class memory: public sc_module, public simple_mem_if
       int x;
        while (init_file >> x){
         memData[cnt++] = x;
-        //this->Write(cnt++, x);
-        //cnt++;
 
 
       }
-      //cout << "=======Memory size is"<< cnt <<' ';
+
 
     }
     bool Write(unsigned int addr, unsigned int data)
@@ -49,21 +47,4 @@ class memory: public sc_module, public simple_mem_if
       }
 
 
-    // void memory::register_port(sc_port_base& port_, const char* if_typename_)
-    // {
-    //   cout << "binding " << port_.name() << " to " << "interface: " << if_typename_ << endl;
-    // }
   };
-
-
-
-
-
-
-
-
-
-
-  // class mem : public sc_module, public simple_mem_if { public:      
-  //   SC_HAS_PROCESS(mem);
-  //   SC_THREAD(oscillator);

@@ -68,14 +68,12 @@ SC_MODULE (hello_world) {
 int sc_main(int argc, char* argv[]) {
   sad Sad1("SAD1");
   char* file = (char *)"mem_init.txt";
-  memory Mem_rtl("MEMORY_RTL", (char *)file);
+  memory Mem_Simple("MEM_SMPL", (char *)file);
 
-  //     // Link memory
-  Sad1.MEM(Mem_rtl);
-
-  sc_start();
-  
+      // Link memory
+  Sad1.MEM(Mem_Simple);
   //Sad1.sadFunction();
+  sc_start();
 
   // int arr[500];
   // ifstream is("mem.txt");
@@ -102,3 +100,4 @@ int sc_main(int argc, char* argv[]) {
   // hello.say_hello();
   return(0);
 }
+

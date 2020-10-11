@@ -1,6 +1,6 @@
 #include "systemc.h"
 
-#ifndef __interface_H_INCLUDED__   // if Node.h hasn't been included yet...
+#ifndef __interface_H_INCLUDED__   
 #define __interface_H_INCLUDED__
 
 

@@ -13,9 +13,9 @@ class MEMORY_RTL: public sc_module
   public:
     sc_in<sc_logic> clk;
     sc_in<sc_logic> Ren, Wen;
-    sc_in<unsigned int> Addr;
-    sc_in<unsigned int> DataIn;
-    sc_out<unsigned int> DataOut;
+    sc_in<int> Addr;
+    sc_in<int> DataIn;
+    sc_out<int> DataOut;
     sc_out<sc_logic> Ack;
 
     SC_HAS_PROCESS(MEMORY_RTL);
@@ -28,18 +28,16 @@ class MEMORY_RTL: public sc_module
         Ack.write(sc_logic_Z);
         return;
       }
-      unsigned int addr_val = Addr.read();
+      int addr_val = Addr.read();
       if (addr_val < MEM_SIZE)
       {
         if(Ren.read() == sc_logic_1)
         {
-          //std::cout << "Reading from Memory : addr " << addr_val << ", value " << mem[(unsigned int) addr_val] << std::endl;
+         
           DataOut.write(memData[addr_val]);
         }
-        // Write mode
         else if (Wen.read() == sc_logic_1)
         {
-          //std::cout << "Writing to Memory : addr " << addr_val << ", value " << mem[(unsigned int) dataIn.read()] << std::endl;
           memData[addr_val] = DataIn.read();
         }
 
