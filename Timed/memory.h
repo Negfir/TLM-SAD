@@ -21,6 +21,7 @@ class memory: public sc_module, public simple_mem_if
   
     MEMORY_RTL mem_rtl;
     oscillator osc;
+
     memory(sc_module_name nm, char* file) : sc_module(nm), osc("oscillator"), mem_rtl("MEMORY_RTL",(char *)file)
     {
 
@@ -41,69 +42,69 @@ class memory: public sc_module, public simple_mem_if
       osc.clk(clk_sig);
 
     }
+
+
+
+    // void oscillator() {
+    //   while(true)
+    //   {
+    //      clk_sig.write(sc_logic_0);
+    //      wait(5, SC_NS);
+    //      clk_sig.write(sc_logic_1);
+    //      wait(5, SC_NS);
+    //   }
+    // }
+
+
     bool Write(unsigned int addr, unsigned int data)
     {
-      while (ack_sig.read() != sc_logic_0)
-      {
-        wait(10, SC_NS);
-      }
-      wen_sig.write(sc_logic_1);
-      ren_sig.write(sc_logic_0);
-      addr_sig.write(addr);
-      dataIn_sig.write(data);
-
-      // while (ack_sig.read() == sc_logic_Z)
+      // while (ack_sig.read() != sc_logic_0)
       // {
       //   wait(10, SC_NS);
       // }
+      
+
+      addr_sig.write(addr);
+      dataIn_sig.write(data);
+
       wait(10, SC_NS);
 
-      bool ack = ack_sig.read() == sc_logic_1;
+      //wen_sig.write(sc_logic_1);
+      ren_sig.write(sc_logic_0);
+
+      wait(10, SC_NS);
+
       wen_sig.write(sc_logic_0);
 
-
+      bool ack = ack_sig.read() == sc_logic_1;
+      cout << "Writing " << dataIn_sig<< " on address:" << addr_sig << " ack is:" << ack <<endl;
+      return ack;
 
       }
 
     bool Read(unsigned int addr, unsigned int& data)
     {
-      while (ack_sig.read() != sc_logic_0)
-      {
-        wait(10, SC_NS);
-      }
+
+      //wait(10, SC_NS);
       ren_sig.write(sc_logic_1);
-      wen_sig.write(sc_logic_0);
+      //wen_sig.write(sc_logic_0);
+      
+
       addr_sig.write(addr);
 
-     // while (ack_sig.read() == sc_logic_Z)
-     //  {
-     //    wait(10, SC_NS);
-     //  }
+      data = dataOut_sig.read();
+
       wait(10, SC_NS);
 
-      data = dataOut_sig.read();
-      bool ack = ack_sig.read() == sc_logic_1;
+
       ren_sig.write(sc_logic_0);
+      wait(10, SC_NS);
+
+      bool ack = ack_sig.read() == sc_logic_1;
 
       return ack;
 
 
       }
 
-
-
-
   };
-
-
-
-
-
-
-
-
-
-
-  // class mem : public sc_module, public simple_mem_if { public:      
-  //   SC_HAS_PROCESS(mem);
-  //   SC_THREAD(oscillator);

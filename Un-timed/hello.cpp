@@ -9,6 +9,7 @@
 #define INPUT1_ADDR 0
 #define INPUT2_ADDR 16384
 #define SAD_OUTPUT_ADDR 32768
+//#define SAD_OUTPUT_ADDR 32768
 
 SC_MODULE(sad) {
   sc_port<simple_mem_if> MEM;
@@ -18,22 +19,24 @@ SC_MODULE(sad) {
     unsigned int block;
     unsigned int res;
     unsigned int a, b;
+    bool ack1,ack2,ack3;
 
     for (block=0; block<NUM_BLOCKS; block++)
     {
       res = 0;
       for (i=0; i<BLOCK_SIZE; i++)
       {
-        MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
-        MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
+        ack1=MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
+        ack2=MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
         //cout  << " A : " << a << " B : " << b << endl;
         v = a - b;
         if( v < 0 ) v = -v;
         res += v;
         //cout << "======"<< res <<endl ;
       }
-      MEM->Write(SAD_OUTPUT_ADDR + block, res);
+      ack3=MEM->Write(SAD_OUTPUT_ADDR + block, res);
       cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
+      
     }
   }
 

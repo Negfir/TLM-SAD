@@ -29,9 +29,10 @@ class memory: public sc_module, public simple_mem_if
       if (addr < MEM_SIZE)
       {
         memData[addr]=data;
-        //cout << "Writing " << data << endl;
+        cout << "data="<< data << " writen succesfuly! " << endl;
         return true;
       }
+      cout << "!!! Writing failed !!!" <<endl;
       return false;
       }
 
@@ -40,9 +41,10 @@ class memory: public sc_module, public simple_mem_if
       if (addr < MEM_SIZE)
       {
         data=memData[addr];
-        //cout << "Reading " << data <<endl;
+        
         return true;
       }
+      cout << "!!! Reading failed !!!" <<endl;
       return false;
       }
 

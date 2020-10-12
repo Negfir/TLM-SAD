@@ -49,6 +49,7 @@ class MEMORY_RTL: public sc_module
         if (Wen.read() == sc_logic_1)
         {
           memData[Addr.read()] = DataIn.read();
+          
         }
 
         else if(Ren.read() == sc_logic_1)
