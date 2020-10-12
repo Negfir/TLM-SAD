@@ -17,27 +17,26 @@ class memory: public sc_module, public simple_mem_if
     sc_signal<int> dataOut_sig;
 
   
-    MEMORY_RTL mem_rtl;
+    MEMORY_RTL memory_rtl;
     oscillator osc;
 
-    memory(sc_module_name nm, char* file) : sc_module(nm), osc("oscillator"), mem_rtl("MEMORY_RTL",(char *)file)
+    memory(sc_module_name nm, char* file) : sc_module(nm), osc("oscillator"), memory_rtl("MEMORY_RTL",(char *)file)
     {
 
+      osc.clk(clk_sig);
 
-      mem_rtl.clk(clk_sig);
-
-      mem_rtl.Addr(addr_sig);
-      mem_rtl.DataIn(dataIn_sig);
-      mem_rtl.DataOut(dataOut_sig);
-      mem_rtl.Ren(ren_sig);
-      mem_rtl.Wen(wen_sig);
-      mem_rtl.Ack(ack_sig);
+      memory_rtl.clk(clk_sig);
+      memory_rtl.Addr(addr_sig);
+      memory_rtl.DataIn(dataIn_sig);
+      memory_rtl.DataOut(dataOut_sig);
+      memory_rtl.Ren(ren_sig);
+      memory_rtl.Wen(wen_sig);
+      memory_rtl.Ack(ack_sig);
 
       ren_sig.write(sc_logic_0);
       wen_sig.write(sc_logic_0);
       ack_sig.write(sc_logic_0);
 
-      osc.clk(clk_sig);
 
     }
 

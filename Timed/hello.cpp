@@ -38,7 +38,10 @@ SC_MODULE(sad) {
 
         v = a - b;
         wait(10,SC_NS); // subtraction (a - b)
-        if( v < 0 ) v = -v;
+        if( v < 0 ) {
+          v = -v;
+          wait(10,SC_NS); // negate 0-v or compute 2's complement
+        }
         wait(10,SC_NS); //comparison (v<0)
 
         res += v;
@@ -68,12 +71,12 @@ SC_MODULE(sad) {
 int sc_main(int argc, char* argv[]) {
   sad sadModule("sadModule");
   char* file = (char *)"mem_init.txt";
-  memory mem("mem", (char *)file);
+  memory mem("mem", (char *)argv[1]);
 
   sadModule.MEM(mem);
   sadModule.clk(mem.clk_sig);
 
-
+  //create some waveforms
   sc_trace_file *wf = sc_create_vcd_trace_file("WaveForm");
  
   sc_trace(wf, mem.addr_sig , "addr" );
@@ -83,7 +86,7 @@ int sc_main(int argc, char* argv[]) {
   sc_trace(wf, mem.wen_sig, "wen");
   sc_trace(wf, mem.ack_sig, "ack");
   sc_trace(wf, mem.clk_sig, "clk");
-  //sc_trace(wf, sadModule.MEM, "Bus");
+  
   sc_start();
 
   sc_close_vcd_trace_file(wf);
