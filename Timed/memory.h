@@ -63,21 +63,21 @@ class memory: public sc_module, public simple_mem_if
       //   wait(10, SC_NS);
       // }
       
-
+      
       addr_sig.write(addr);
       dataIn_sig.write(data);
 
       wait(10, SC_NS);
 
-      //wen_sig.write(sc_logic_1);
-      ren_sig.write(sc_logic_0);
+      wen_sig.write(sc_logic_1);
+      //ren_sig.write(sc_logic_0);
 
       wait(10, SC_NS);
 
       wen_sig.write(sc_logic_0);
 
       bool ack = ack_sig.read() == sc_logic_1;
-      cout << "Writing " << dataIn_sig<< " on address:" << addr_sig << " ack is:" << ack <<endl;
+      //cout << "Writing " << dataIn_sig<< " on address:" << addr_sig << " ack is:" << ack <<endl;
       return ack;
 
       }

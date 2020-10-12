@@ -29,7 +29,7 @@ class memory: public sc_module, public simple_mem_if
       if (addr < MEM_SIZE)
       {
         memData[addr]=data;
-        cout << "data="<< data << " writen succesfuly! " << endl;
+        cout << "data="<< data << " writen successfully! " << endl;
         return true;
       }
       cout << "!!! Writing failed !!!" <<endl;

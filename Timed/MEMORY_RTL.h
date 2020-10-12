@@ -46,16 +46,19 @@ class MEMORY_RTL: public sc_module
       if (Addr.read() < MEM_SIZE)
       {
 
+
         if (Wen.read() == sc_logic_1)
         {
           memData[Addr.read()] = DataIn.read();
-          
+          cout << "data="<< DataIn.read() << " writen successfully! " << endl;
+
         }
 
         else if(Ren.read() == sc_logic_1)
         {
          
           DataOut.write(memData[Addr.read()]);
+          //cout << "data="<< DataIn.read() << " read successfully! " << endl;
         }
 
 
@@ -65,6 +68,7 @@ class MEMORY_RTL: public sc_module
       else
       {
         Ack.write(sc_logic_0);
+        cout << "!!! Array out of bound !!!" <<endl;
       }
     }
 

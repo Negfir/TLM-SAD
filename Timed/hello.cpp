@@ -47,7 +47,7 @@ SC_MODULE(sad) {
         wait(10,SC_NS); //increment (i++)
       }
       ack3=MEM->Write(SAD_OUTPUT_ADDR + block, res);
-      cout << "Read is ==== " << ack3 <<endl;
+      //cout << "Write Ack is ==== " << ack3 <<endl;
       cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
       wait(10,SC_NS); //increment (block++)
     }
