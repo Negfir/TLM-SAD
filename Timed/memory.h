@@ -10,13 +10,11 @@ class memory: public sc_module, public simple_mem_if
 
   
   public:
+    sc_signal<sc_logic> clk_sig;
+    sc_signal<sc_logic>ren_sig, wen_sig, ack_sig;
     sc_signal<int> addr_sig;
     sc_signal<int> dataIn_sig;
     sc_signal<int> dataOut_sig;
-    sc_signal<sc_logic> ren_sig;
-    sc_signal<sc_logic> wen_sig;
-    sc_signal<sc_logic> ack_sig;
-    sc_signal<sc_logic> clk_sig;
 
   
     MEMORY_RTL mem_rtl;
@@ -70,7 +68,6 @@ class memory: public sc_module, public simple_mem_if
       wait(10, SC_NS);
 
       wen_sig.write(sc_logic_1);
-      //ren_sig.write(sc_logic_0);
 
       wait(10, SC_NS);
 
@@ -87,9 +84,7 @@ class memory: public sc_module, public simple_mem_if
 
       //wait(10, SC_NS);
       ren_sig.write(sc_logic_1);
-      //wen_sig.write(sc_logic_0);
-      
-
+    
       addr_sig.write(addr);
 
       data = dataOut_sig.read();
