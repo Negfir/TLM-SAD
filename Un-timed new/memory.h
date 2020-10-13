@@ -43,19 +43,21 @@ class memory: public sc_module, public simple_mem_if
     }
     bool Write(unsigned int addr, unsigned int data)
     {
-      while (ack_sig.read() != sc_logic_Z)
-      {
-        wait(10, SC_NS);
-      }
+      // while (ack_sig.read() != sc_logic_Z)
+      // {
+      //   wait(10, SC_NS);
+      // }
+      wait(10, SC_NS);
       wen_sig.write(sc_logic_1);
       ren_sig.write(sc_logic_0);
       addr_sig.write(addr);
       dataIn_sig.write(data);
+      wait(10, SC_NS);
 
-      while (ack_sig.read() == sc_logic_Z)
-      {
-        wait(10, SC_NS);
-      }
+      // while (ack_sig.read() == sc_logic_Z)
+      // {
+      //   wait(10, SC_NS);
+      // }
 
       bool ack = ack_sig.read() == sc_logic_1;
       wen_sig.write(sc_logic_0);
@@ -66,18 +68,20 @@ class memory: public sc_module, public simple_mem_if
 
     bool Read(unsigned int addr, unsigned int& data)
     {
-      while (ack_sig.read() != sc_logic_Z)
-      {
-        wait(10, SC_NS);
-      }
+      // while (ack_sig.read() != sc_logic_Z)
+      // {
+      //   wait(10, SC_NS);
+      // }
+      wait(10, SC_NS);
       ren_sig.write(sc_logic_1);
       wen_sig.write(sc_logic_0);
       addr_sig.write(addr);
 
-     while (ack_sig.read() == sc_logic_Z)
-      {
-        wait(10, SC_NS);
-      }
+     // while (ack_sig.read() == sc_logic_Z)
+     //  {
+     //    wait(10, SC_NS);
+     //  }
+      wait(10, SC_NS);
 
       data = dataOut_sig.read();
       bool ack = ack_sig.read() == sc_logic_1;

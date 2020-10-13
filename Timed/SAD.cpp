@@ -15,8 +15,11 @@ SC_MODULE(sad) {
 
 
   sc_port<simple_mem_if> MEM;
-
   sc_in<sc_logic> clk;
+  sc_signal<int> SAD_res;
+  sc_signal<int> sub;
+  sc_signal<int> a_sig;
+  sc_signal<int> b_sig;
 
   void sadFunction() {
     int i, v;
@@ -32,17 +35,21 @@ SC_MODULE(sad) {
       for (i=0; i<BLOCK_SIZE; i++)
       {
         wait(10,SC_NS); //comparison (i<BLOCK_SIZE)
-        ack1=MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
-        ack2=MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
-
-
-        v = a - b;
+        MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
+        MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
+        a_sig.write(a);
+        b_sig.write(b);
         wait(10,SC_NS); // subtraction (a - b)
+        v = a - b;
+
+        wait(10,SC_NS); //comparison (v<0)
         if( v < 0 ) {
           v = -v;
           wait(10,SC_NS); // negate 0-v or compute 2's complement
         }
-        wait(10,SC_NS); //comparison (v<0)
+        sub.write(v);
+        cout << "### Sub result:" << v << endl ;
+        
 
         res += v;
         wait(10,SC_NS); //sum (res + v)
@@ -52,6 +59,7 @@ SC_MODULE(sad) {
       ack3=MEM->Write(SAD_OUTPUT_ADDR + block, res);
       //cout << "Write Ack is ==== " << ack3 <<endl;
       cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
+      SAD_res.write(res);
       wait(10,SC_NS); //increment (block++)
     }
     
@@ -86,7 +94,13 @@ int sc_main(int argc, char* argv[]) {
   sc_trace(wf, mem.wen_sig, "wen");
   sc_trace(wf, mem.ack_sig, "ack");
   sc_trace(wf, mem.clk_sig, "clk");
-  
+  sc_trace(wf, sadModule.SAD_res, "SAD");
+  sc_trace(wf, sadModule.sub, "sub");
+  sc_trace(wf, sadModule.clk, "SAD_clk");
+  sc_trace(wf, sadModule.a_sig, "a");
+  sc_trace(wf, sadModule.b_sig, "b");
+  sc_trace(wf, mem.memory_rtl.DataIn, "MEM_DataIn");
+  sc_trace(wf, mem.memory_rtl.DataOut, "MEM_DataOut");
   sc_start();
 
   sc_close_vcd_trace_file(wf);

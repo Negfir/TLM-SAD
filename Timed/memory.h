@@ -81,18 +81,14 @@ class memory: public sc_module, public simple_mem_if
     bool Read(unsigned int addr, unsigned int& data)
     {
 
-      //wait(10, SC_NS);
-      ren_sig.write(sc_logic_1);
-    
+      wait(10, SC_NS);
+      ren_sig.write(sc_logic_1); 
       addr_sig.write(addr);
+      wait(10, SC_NS);
 
       data = dataOut_sig.read();
-
-      wait(10, SC_NS);
-
-
       ren_sig.write(sc_logic_0);
-      wait(10, SC_NS);
+      //wait(10, SC_NS);
 
       bool ack = ack_sig.read() == sc_logic_1;
 

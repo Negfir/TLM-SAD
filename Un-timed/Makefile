@@ -1,5 +1,5 @@
 output: hello.o
-	g++ hello.cpp -o hello.o  -l systemc
+	g++ SAD.cpp -o SAD.o  -l systemc
 
 
 clean:
