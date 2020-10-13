@@ -28,14 +28,14 @@ SC_MODULE(sad) {
       {
         ack1=MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
         ack2=MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
-        //cout  << " A : " << a << " B : " << b << endl;
+
         v = a - b;
         if( v < 0 ) v = -v;
         res += v;
         //cout << "======"<< res <<endl ;
       }
       ack3=MEM->Write(SAD_OUTPUT_ADDR + block, res);
-      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
+      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD: " << res <<endl;
       
     }
   }
@@ -52,8 +52,8 @@ SC_MODULE(sad) {
 
 int sc_main(int argc, char* argv[]) {
   sad sadModule("sadModule");
-  char* file = (char *)"mem_init.txt";
-  memory mem("mem", (char *)file);
+  //char* file = (char *)"mem_init.txt";
+  memory mem("mem", (char *)argv[1]);
 
   sadModule.MEM(mem);
   sadModule.sadFunction();

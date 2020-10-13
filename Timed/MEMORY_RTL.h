@@ -7,10 +7,13 @@
 
 class MEMORY_RTL: public sc_module
 {
-  private:
-    sc_uint<32> memData[MEM_SIZE];
+
+    
 
   public:
+
+    unsigned int memData[MEM_SIZE];
+
     sc_in<sc_logic> clk;
     sc_in<sc_logic> Ren, Wen;
     sc_in<int> Addr;
@@ -37,11 +40,6 @@ class MEMORY_RTL: public sc_module
 
     void rtl()
     {
-      if (Ren.read() == sc_logic_0 && Wen.read() == sc_logic_0)
-      {
-        Ack.write(sc_logic_0);
-        return;
-      }
       
       if (Addr.read() < MEM_SIZE)
       {
@@ -68,8 +66,19 @@ class MEMORY_RTL: public sc_module
       else
       {
         Ack.write(sc_logic_0);
-        cout << "!!! Array out of bound !!!" <<endl;
+        cout << "!!! Memory out of bound !!!" <<endl;
       }
+
+
+      // make ack signal zero after read/wrtite is done
+      if (Wen.read() == sc_logic_0 && Ren.read() == sc_logic_0)
+      {
+        Ack.write(sc_logic_0);
+        return;
+      }
+
+
+
     }
 
 

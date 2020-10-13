@@ -35,10 +35,13 @@ SC_MODULE(sad) {
       for (i=0; i<BLOCK_SIZE; i++)
       {
         wait(10,SC_NS); //comparison (i<BLOCK_SIZE)
+
         ack1=MEM->Read(INPUT1_ADDR+(block*BLOCK_SIZE)+i, a);
-        ack2=MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
         a_sig.write(a);
+
+        ack2=MEM->Read(INPUT2_ADDR+(block*BLOCK_SIZE)+i, b);
         b_sig.write(b);
+        
         wait(10,SC_NS); // subtraction (a - b)
         v = a - b;
 
@@ -56,7 +59,7 @@ SC_MODULE(sad) {
         wait(10,SC_NS); //increment (i++)
       }
       ack3=MEM->Write(SAD_OUTPUT_ADDR + block, res);
-      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD : " << res <<endl;
+      cout << "@"<<sc_time_stamp() << " block #" << block << " | SAD: " << res <<endl;
       SAD_res.write(res);
       wait(10,SC_NS); //increment (block++)
     }
@@ -94,7 +97,7 @@ int sc_main(int argc, char* argv[]) {
   sc_trace(wf, mem.clk_sig, "clk");
   sc_trace(wf, sadModule.SAD_res, "SAD");
   sc_trace(wf, sadModule.sub, "sub");
-  sc_trace(wf, sadModule.clk, "SAD_clk");
+  //sc_trace(wf, sadModule.clk, "SAD_clk");
   sc_trace(wf, sadModule.a_sig, "a");
   sc_trace(wf, sadModule.b_sig, "b");
   sc_start();

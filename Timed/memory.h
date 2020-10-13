@@ -25,22 +25,20 @@ class memory: public sc_module, public simple_mem_if
 
       osc.clk(clk_sig);
 
-      memory_rtl.clk(clk_sig);
-      memory_rtl.Addr(addr_sig);
-      memory_rtl.DataIn(dataIn_sig);
-      memory_rtl.DataOut(dataOut_sig);
-      memory_rtl.Ren(ren_sig);
-      memory_rtl.Wen(wen_sig);
-      memory_rtl.Ack(ack_sig);
-
       ren_sig.write(sc_logic_0);
       wen_sig.write(sc_logic_0);
       ack_sig.write(sc_logic_0);
 
+      memory_rtl.clk(clk_sig);
+      memory_rtl.Ren(ren_sig);
+      memory_rtl.Wen(wen_sig);
+      memory_rtl.Addr(addr_sig);
+      memory_rtl.DataIn(dataIn_sig);
+      memory_rtl.DataOut(dataOut_sig);
+      memory_rtl.Ack(ack_sig);
+
 
     }
-
-
 
     // void oscillator() {
     //   while(true)
@@ -54,21 +52,16 @@ class memory: public sc_module, public simple_mem_if
 
 
     bool Write(unsigned int addr, unsigned int data)
-    {
-      // while (ack_sig.read() != sc_logic_0)
-      // {
-      //   wait(10, SC_NS);
-      // }
-      
+    {     
       
       addr_sig.write(addr);
       dataIn_sig.write(data);
 
-      wait(10, SC_NS);
+      wait(10, SC_NS); //wait for address to be valid
 
       wen_sig.write(sc_logic_1);
 
-      wait(10, SC_NS);
+      wait(10, SC_NS); // wait for the data to be written on memory
 
       wen_sig.write(sc_logic_0);
 
@@ -81,14 +74,17 @@ class memory: public sc_module, public simple_mem_if
     bool Read(unsigned int addr, unsigned int& data)
     {
 
-      wait(10, SC_NS);
+      
       ren_sig.write(sc_logic_1); 
       addr_sig.write(addr);
-      wait(10, SC_NS);
+      
+      wait(10, SC_NS); //wait for address to be valid
 
       data = dataOut_sig.read();
+
+      wait(10, SC_NS); // wait for read data to be available on bus
+
       ren_sig.write(sc_logic_0);
-      //wait(10, SC_NS);
 
       bool ack = ack_sig.read() == sc_logic_1;
 
